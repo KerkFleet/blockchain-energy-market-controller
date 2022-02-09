@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
+//This is marked as an error for me but i don't think it's actually an error. IDK.
 import "OpenZeppelin/openzeppelin-contracts@4.4.1/contracts/access/Ownable.sol";
 
 
