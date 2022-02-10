@@ -22,7 +22,7 @@ contract DemandReduction is Ownable{
 
     event notify_consumer();
 
-    function request_reduction(uint reduction_amount) public onlyOwner {
+    function request_reduction(uint reduction_amount) public onlyOwner{
         power_reduction = reduction_amount;
         emit notify_consumer();
     }
