@@ -1,6 +1,24 @@
-## Basic Use
+## Getting started with Brownie
 
-To interact with a deployed contract in a local environment, start by opening the console:
+I would recommend setting up a python virtual environment first by executing:
+
+```bash
+python3 -m venv .venv
+```
+
+and to activate:
+
+```bash
+source .venv/bin/activate
+```
+
+To install the packages, from root project directory execute:
+
+```bash
+pip install -r requirements.txt
+```
+## Running Scripts
+
 
 
 ## Testing
