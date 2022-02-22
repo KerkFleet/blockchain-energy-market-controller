@@ -9,6 +9,7 @@ contract DemandReduction is Ownable{
     struct Bid {
         uint power;
         uint price;
+        address consumer;
     }
 
     // To keep track of who has registered
@@ -20,9 +21,13 @@ contract DemandReduction is Ownable{
     uint reward_amount;
     uint power_reduction;
 
+    // selected winners
+    address [] winners;
+
     event notify_consumer();
 
-    function request_reduction(uint reduction_amount) public onlyOwner{
+    function request_reduction(uint reduction_amount) public payable onlyOwner{
+        require(msg.value >= 0.01 ether, "Must pay at least 0.01 ether");
         power_reduction = reduction_amount;
         emit notify_consumer();
     }
@@ -32,17 +37,22 @@ contract DemandReduction is Ownable{
     }
 
     function submit_bids(uint[] memory power, uint[] memory price) public {
+        delete bids[msg.sender];
         require(registered[msg.sender] == true);
         require(power.length == price.length, "Each bid must have a reduction amount and an associated price");
-        Bid memory bid;
         for(uint i = 0; i < power.length; i++){
-            bid = Bid(power[i], price[i]);
-            bids[msg.sender].push(bid);
+            bids[msg.sender].push(Bid(power[i], price[i], msg.sender)); 
         }
 
     }
 
-    function disperse_rewards() private {
+    function disperse_rewards() public {
+        for(uint i = 0; i < winners.length; i++){
+            address payable winner = payable(winners[i]);
+            winner.transfer(reward_amount);
+        }
+        address payable _owner = payable(owner());
+        _owner.transfer(address(this).balance);
 
     }
 

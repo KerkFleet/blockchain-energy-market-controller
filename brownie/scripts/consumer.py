@@ -43,7 +43,9 @@ def main():
     event_filter = contract.events.notify_consumer.createFilter(fromBlock='latest')
     while True:
         utils.listen_for_event(event_filter)
-        print("Time to submit bids")
+        print("Submitting bids")
+        # test = contract.functions.submit_bids([1], [2], {"from": accounts[0]}).transact()
+
         #call bid submitting function here
 
 
