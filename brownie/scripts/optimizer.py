@@ -12,11 +12,4 @@ def main():
 
     contract = Contract(contract_address) # an example of getting a contract using Brownie
 
-    energy_reduction = input("Desired energy reduction amount: ")
-    # contract.disperse_rewards({"from": accounts[0]})
-    contract.request_reduction(energy_reduction, {"from": accounts[0], "amount": 0.01e18})
-    
-    # Does not work
-    # gas_limit: 6721975
-    # contract.optimize_bids({"from": accounts[0]})
-
+    contract.optimize_bids({"from": accounts[0]})
