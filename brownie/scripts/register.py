@@ -1,4 +1,4 @@
-from brownie import web3, accounts
+from brownie import Contract, web3, accounts
 from dotenv import load_dotenv, find_dotenv
 from . import utils
 import os
@@ -14,7 +14,9 @@ def main():
     contract_abi = utils.load_contract_abi("DemandReduction")
 
     # load contract
-    contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
+    contract = Contract(contract_address)
     print("Connection created.")
 
-    contract.functions.register().call()
+    # test = contract.check_registered(accounts[0])
+    contract.register({"from": accounts[0]})
+    # print(test)

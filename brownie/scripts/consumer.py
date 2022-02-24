@@ -1,4 +1,4 @@
-from brownie import web3, accounts
+from brownie import Contract, web3, accounts
 from dotenv import load_dotenv, find_dotenv
 from . import utils
 import os
@@ -16,8 +16,8 @@ def main():
     while True:
         count = count + 1
         print(f"Block {count}:")
-        e = input("Energy amount: ")
-        v = input("Energy value: ")
+        e = int(input("Energy amount: "))
+        v = int(input("Energy value: ")) * 10**18
         energy.append(e)
         value.append(v)
         cont = input("Add another?(y/n): ")
@@ -34,8 +34,10 @@ def main():
     contract_address = os.environ.get('CONTRACT_ADDRESS')
     contract_abi = utils.load_contract_abi("DemandReduction")
 
+
     # load contract
     contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
+    brownie_contract = Contract(contract_address)
     print("Connection created.")
 
     print("Now waiting for a demand response request. . .")
@@ -44,7 +46,7 @@ def main():
     while True:
         utils.listen_for_event(event_filter)
         print("Submitting bids")
-        # test = contract.functions.submit_bids([1], [2], {"from": accounts[0]}).transact()
+        brownie_contract.submit_bids(energy, value, {"from": accounts[0]})
 
         #call bid submitting function here
 

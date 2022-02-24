@@ -34,71 +34,64 @@ contract DemandReduction is Ownable{
 
     // ---------- Optimize Functions -----------
     // Optimize Bids is called by the utility in one of their scripts
-    function optimize_bids() public {
-
-        // Set Reduction Resquest
-        uint reductionExample = 4;
-        // ------- Create Test Data --------
-
-        // Sort the bids from Cheapest to most expensive
-        // bidsExample = bidInsertionSort(bidsExample);
+    function select_winners() public {
         bidInsertionSort();
-
-        // Array Address of last winning bid
         uint lastWinningBid = 0;
-        // Add up bids unitl you find a winner
-        lastWinningBid = findWinningBids(reductionExample);
-
-        // Disperse Rewards
+        lastWinningBid = optimize_bids(power_reduction);
+        disperse_rewards(lastWinningBid);
+        delete bids;
     }
 
 
     function bidInsertionSort() public {
-    for (uint i = 0;i < bids.length;i++){
-        uint temp = bids[i].price;
-        uint j;
-        for (j = i -1; j >= 0 && temp < bids[j].price; j--)
-        bids[j+1] = bids[j];
-        bids[j + 1].price = temp;
-    }
+        for (uint i = 0;i < bids.length;i++){
+            uint temp = bids[i].price;
+            uint j;
+            for (j = i -1; j >= 0 && temp < bids[j].price; j--)
+            bids[j+1] = bids[j];
+            bids[j + 1].price = temp;
+        }
     }
 
-    function findWinningBids(uint reduction)internal returns(uint){
-    uint totalPower = 0;
-    uint lastWinningBid;
-    for (uint i = 0;totalPower < reduction || i < bids.length;i++){
-        totalPower += bids[i].power;
-        lastWinningBid = i;
-    }
-    return lastWinningBid;
+    function optimize_bids(uint reduction)internal returns(uint){
+        uint totalPower = 0;
+        uint lastWinningBid;
+        for (uint i = 0; totalPower < reduction && i < bids.length; i++){
+            totalPower += bids[i].power;
+            reward_amount = bids[i].price;
+            lastWinningBid = i;
+        }
+        return lastWinningBid;
     }
     // ---------- Optimize Functions -----------
 
 
     function submit_bids(uint[] memory power, uint[] memory price) public {
-        delete bids[msg.sender];
         require(registered[msg.sender] == true);
         require(power.length == price.length, "Each bid must have a reduction amount and an associated price");
         for(uint i = 0; i < power.length; i++){
-            bids[msg.sender].push(Bid(power[i], price[i], msg.sender)); 
+            bids.push(Bid(power[i], price[i], msg.sender)); 
         }
 
     }
 
-    function disperse_rewards() public {
-        for(uint i = 0; i < winners.length; i++){
-            address payable winner = payable(winners[i]);
-            winner.transfer(reward_amount);
+    function disperse_rewards(uint last_bid) public {
+        for(uint i = 0; i < last_bid; last_bid++){
+            address payable winner = payable(bids[i].consumer);
+            winner.transfer(reward_amount * 1 wei);
         }
         address payable _owner = payable(owner());
         _owner.transfer(address(this).balance);
-
     }
 
     function register() public {
-        require(registered[msg.sender] == false);
+        require(registered[msg.sender] == false, "Already registered");
         registrants.push(msg.sender);
         registered[msg.sender] = true;
+    }
+
+    function check_registered(address consumer) public view returns(bool){
+        return registered[consumer];
     }
 
 }
