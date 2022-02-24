@@ -17,7 +17,7 @@ contract DemandReduction is Ownable{
     address [] registrants;
 
     // Mapping to map consumer address to array of Bid structs
-    mapping(address => Bid[]) bids;
+    Bid[] bids;
     uint reward_amount;
     uint power_reduction;
 
@@ -32,9 +32,48 @@ contract DemandReduction is Ownable{
         emit notify_consumer();
     }
 
-    function optimze_bids() private {
+    // ---------- Optimize Functions -----------
+    // Optimize Bids is called by the utility in one of their scripts
+    function optimize_bids() public {
 
+        // Set Reduction Resquest
+        uint reductionExample = 4;
+        // ------- Create Test Data --------
+
+        // Sort the bids from Cheapest to most expensive
+        // bidsExample = bidInsertionSort(bidsExample);
+        bidInsertionSort();
+
+        // Array Address of last winning bid
+        uint lastWinningBid = 0;
+        // Add up bids unitl you find a winner
+        lastWinningBid = findWinningBids(reductionExample);
+
+        // Disperse Rewards
     }
+
+
+    function bidInsertionSort() public {
+    for (uint i = 0;i < bids.length;i++){
+        uint temp = bids[i].price;
+        uint j;
+        for (j = i -1; j >= 0 && temp < bids[j].price; j--)
+        bids[j+1] = bids[j];
+        bids[j + 1].price = temp;
+    }
+    }
+
+    function findWinningBids(uint reduction)internal returns(uint){
+    uint totalPower = 0;
+    uint lastWinningBid;
+    for (uint i = 0;totalPower < reduction || i < bids.length;i++){
+        totalPower += bids[i].power;
+        lastWinningBid = i;
+    }
+    return lastWinningBid;
+    }
+    // ---------- Optimize Functions -----------
+
 
     function submit_bids(uint[] memory power, uint[] memory price) public {
         delete bids[msg.sender];
