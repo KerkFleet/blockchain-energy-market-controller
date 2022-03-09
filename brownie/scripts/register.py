@@ -3,7 +3,7 @@ from dotenv import load_dotenv, find_dotenv
 from . import utils
 import os
 
-accounts.load('test-rinkeby')
+accounts.load('test-rinkeby-2')
 env = find_dotenv()
 load_dotenv(env)
 

@@ -3,7 +3,7 @@ from dotenv import load_dotenv, find_dotenv
 from . import utils
 import os
 
-accounts.load('test-rinkeby')
+accounts.load('test-rinkeby-2')
 env = find_dotenv()
 load_dotenv(env)
 
@@ -17,7 +17,8 @@ def main():
         count = count + 1
         print(f"Block {count}:")
         e = int(input("Energy amount: "))
-        v = int(input("Energy value: ")) * 10**18
+        v = int(float(input("Energy value: ")) * 10**18)
+
         energy.append(e)
         value.append(v)
         cont = input("Add another?(y/n): ")
@@ -40,13 +41,25 @@ def main():
     brownie_contract = Contract(contract_address)
     print("Connection created.")
 
-    print("Now waiting for a demand response request. . .")
     # create filter for event to listen to
-    event_filter = contract.events.notify_consumer.createFilter(fromBlock='latest')
+    submit_event_filter = contract.events.notify_consumer.createFilter(fromBlock='latest')
+    rewards_event_filter = contract.events.notify_rewards.createFilter(fromBlock='latest')
     while True:
-        utils.listen_for_event(event_filter)
-        print("Submitting bids")
+        print("Now waiting for a energy reduction request. . .")
+        utils.listen_for_event(submit_event_filter)
+        print("Energy reduction requested. Submitting bids!")
         brownie_contract.submit_bids(energy, value, {"from": accounts[0]})
+        print("Waiting selection. . .")
+        utils.listen_for_event(rewards_event_filter)
+        selected = False
+        print("Retrieving winning bids...")
+        winners = brownie_contract.getWinners.call({"from": accounts[0]})
+        for i in winners:
+            if(i[2] == accounts[0]):
+                print("Bid selected: ", i)
+                selected = True
+        if not selected:
+            print("No bids were selected.")
 
         #call bid submitting function here
 
