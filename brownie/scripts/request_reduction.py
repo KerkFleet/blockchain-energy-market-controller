@@ -14,11 +14,11 @@ def main():
 
     energy_reduction = input("Desired energy reduction amount: ")
     # contract.disperse_rewards({"from": accounts[0]})
-    # contract.request_reduction(energy_reduction, {"from": accounts[0], "amount": 0.01e18})
+    contract.request_reduction(energy_reduction, {"from": accounts[0], "amount": 0.01e18})
     # contract.select_winners({"from": accounts[0]})
-    tx = contract.getBids.call({"from": accounts[0]})
+    # tx = contract.getBids.call({"from": accounts[0]})
 
-    print(tx)
+    # print(tx)
     # print(txt)
     # print(txt.return_value)
     

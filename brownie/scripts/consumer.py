@@ -42,9 +42,9 @@ def main():
     print("Connection created.")
 
     # create filter for event to listen to
-    submit_event_filter = contract.events.notify_consumer.createFilter(fromBlock='latest')
-    rewards_event_filter = contract.events.notify_rewards.createFilter(fromBlock='latest')
     while True:
+        submit_event_filter = contract.events.notify_consumer.createFilter(fromBlock='latest')
+        rewards_event_filter = contract.events.notify_rewards.createFilter(fromBlock='latest')
         print("Now waiting for a energy reduction request. . .")
         utils.listen_for_event(submit_event_filter)
         print("Energy reduction requested. Submitting bids!")
@@ -54,12 +54,16 @@ def main():
         selected = False
         print("Retrieving winning bids...")
         winners = brownie_contract.getWinners.call({"from": accounts[0]})
+        print("Winning bids: ")
         for i in winners:
-            if(i[2] == accounts[0]):
+            if(str(i) == accounts[0]):
                 print("Bid selected: ", i)
                 selected = True
         if not selected:
             print("No bids were selected.")
+        else:
+            reward_amount = brownie_contract.getRewardAmount.call({"from": accounts[0]})
+            print("You have been rewarded ", reward_amount, " ETH.")
 
         #call bid submitting function here
 

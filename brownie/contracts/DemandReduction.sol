@@ -48,7 +48,8 @@ contract DemandReduction is Ownable{
 
     // Driver function for selecting the winning bids
     function select_winners() public {
-        // delete winners;
+        require(bids.length > 0, "There are no bids!");
+        delete winners;
         Bid [] memory sorted_bids;
         sorted_bids = bids;
         quickSort(sorted_bids, 0, bids.length-1);
@@ -151,6 +152,10 @@ contract DemandReduction is Ownable{
 
     function getWinners() public view returns (address [] memory){
         return(winners);
+    }
+
+    function getRewardAmount() public view returns (uint) {
+        return(reward_amount);
     }
 
 }
