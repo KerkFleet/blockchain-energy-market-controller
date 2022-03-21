@@ -129,6 +129,7 @@ contract DemandReduction is Ownable{
         for(uint i = 0; i <= last_bid; i++){
             address payable winner = payable(bids[i].consumer);
             winners.push(bids[i].consumer);
+            // winners.push(bids[i]);
             winner.transfer(reward_amount);
         }
         address payable _owner = payable(owner());
@@ -153,6 +154,9 @@ contract DemandReduction is Ownable{
     function getWinners() public view returns (address [] memory){
         return(winners);
     }
+    // function getWinners() public view returns (address [] memory){
+    //     return(winners);
+    // }
 
     function getRewardAmount() public view returns (uint) {
         return(reward_amount);

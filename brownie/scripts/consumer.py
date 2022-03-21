@@ -27,8 +27,12 @@ def main():
 
     print("Your bids input: ")
     print("Energy: ", energy)
-    print("Values: ", value)
-    
+    # print("Values: ", value)
+    print("Values: [", end =" ")
+    for i in value:
+        print(i/10**18, end =" ")
+    print("]")
+
     print("Setting up contract connection. . .")
 
     # load contract data
@@ -38,7 +42,7 @@ def main():
 
     # load contract
     contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
-    brownie_contract = Contract(contract_address)
+    brownie_contract = Contract.from_explorer(contract_address)
     print("Connection created.")
 
     # create filter for event to listen to
@@ -63,7 +67,7 @@ def main():
             print("No bids were selected.")
         else:
             reward_amount = brownie_contract.getRewardAmount.call({"from": accounts[0]})
-            print("You have been rewarded ", reward_amount, " ETH.")
+            print("You have been rewarded ", reward_amount/10**18, " ETH.")
 
         #call bid submitting function here
 
