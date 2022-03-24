@@ -92,7 +92,7 @@ def main():
             print("No bids were selected.")
         else:
             reward_amount = brownie_contract.getRewardAmount.call({"from": accounts[0]})
-            print("You have been rewarded ", reward_amount/10**18, " ETH.")
+            print("You have been rewarded ", reward_amount / 10**18, " ETH.")
 
         #call bid submitting function here
 

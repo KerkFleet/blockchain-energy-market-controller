@@ -1,11 +1,9 @@
-from brownie import Contract, web3, accounts
-from dotenv import load_dotenv, find_dotenv
+from brownie import Contract
 from . import utils
 import os
 
-accounts.load('test-rinkeby-2')
-env = find_dotenv()
-load_dotenv(env)
+utils.load_env()
+account = utils.load_account("CONSUMER_ACCOUNT")
 
 
 def main():
@@ -17,6 +15,7 @@ def main():
     contract = Contract(contract_address)
     print("Connection created.")
 
+    contract.register({"from": account})
+
     # test = contract.check_registered(accounts[0])
-    contract.register({"from": accounts[0]})
     # print(test)
