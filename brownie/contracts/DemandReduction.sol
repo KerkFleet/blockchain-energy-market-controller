@@ -22,6 +22,7 @@ contract DemandReduction is Ownable{
     address [] registrants;
     
     Bid[] bids; // All consumer bids
+    Bid key; 
     address [] winners; // selected winners
     uint reward_amount; // Chosen based on winning bid
     uint power_reduction; // Specified by consumer
