@@ -23,6 +23,7 @@ contract DemandReduction is Ownable{
     
     Bid[] bids; // All consumer bids
     Bid [] winners; // selected winners
+    Bid key; 
     uint reward_amount; // Chosen based on winning bid
     uint power_reduction; // Specified by consumer
     uint power_saved; //total power reduced
@@ -71,6 +72,7 @@ contract DemandReduction is Ownable{
         Bid [] memory sorted_bids;
         sorted_bids = bids;
         quickSort(sorted_bids, 0, bids.length-1);
+        insertionSort(sorted_bids);
         uint lastWinningBid = 0;
         lastWinningBid = optimize_bids(sorted_bids, power_reduction);
         disperse_rewards(sorted_bids, lastWinningBid);
@@ -140,6 +142,22 @@ contract DemandReduction is Ownable{
             quickSort(arr, i, right);
     }
 
+
+    function insertionSort(Bid[] memory arr) private{
+        uint i;
+        uint j;
+        for(i = 1; i < arr.length; i++){
+            key = arr[i];
+            j = i - 1;
+
+            while (j >= 0 && arr[j].price > key.price)
+            {
+                arr[j + 1] = arr[j];
+                j = j - 1;
+            }
+            arr[j + 1] = key;
+        }
+    }
 
     // Function to disperse rewards to each selected winner
     // THIS IS WHERE YOU WOULD SEND APPLIANCE CONTROL SIGNALS ALONG WITH THE REWARD - could set a bit in each winning bid
