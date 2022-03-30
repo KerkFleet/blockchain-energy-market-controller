@@ -16,7 +16,7 @@ def main():
 
     while True:
         # request energy reduction
-        energy_reduction = input("Desired energy reduction amount: ")
+        energy_reduction = int(float(input("Desired energy reduction amount: ")) * 10**3)
         brownie_contract.request_reduction(energy_reduction, {"from": account, "amount": 0.01e18})
 
         input("Press enter to continue. . .")
@@ -30,7 +30,7 @@ def main():
         tx = utils.listen_for_event(reduction_event_filter)
         results = web3.toJSON(tx[0]) 
         results = json.loads(results)
-        print("Total energy reduction: ", results["args"]["power"], " kWh")
+        print("Total energy reduction: ", results["args"]["power"] / 10**3, " kWh")
         print("Total reward dispersed: ", results["args"]["reward"] / 10**18, " ether")
 
 

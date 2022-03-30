@@ -22,10 +22,11 @@ contract DemandReduction is Ownable{
     address [] registrants;
     
     Bid[] bids; // All consumer bids
+    Bid [] winners; // selected winners
     Bid key; 
-    address [] winners; // selected winners
     uint reward_amount; // Chosen based on winning bid
     uint power_reduction; // Specified by consumer
+    uint power_saved; //total power reduced
 
     uint rewards = 0.01 ether; // minimum amount utility must pay to contract to be dispersed as rewards
 
@@ -46,7 +47,7 @@ contract DemandReduction is Ownable{
      modifier costs(uint price) {
       require(msg.value >= price, "Must pay at least 0.01 ether");
          _;
-   }
+    }
 
 
     // ---------- Public Utility Functions -------------- //
@@ -114,6 +115,7 @@ contract DemandReduction is Ownable{
                 break;
             }
         }
+        power_saved = power_amount;
         reward_amount = bids[last_bid].price;
         return last_bid;
     }
@@ -162,14 +164,14 @@ contract DemandReduction is Ownable{
     function disperse_rewards(Bid [] memory bids, uint last_bid) private {
         for(uint i = 0; i <= last_bid; i++){
             address payable winner = payable(bids[i].consumer);
-            winners.push(bids[i].consumer);
+            winners.push(bids[i]);
             winner.transfer(reward_amount);
         }
         address payable _owner = payable(owner());
         _owner.transfer(address(this).balance);
         uint total_reward = reward_amount * (last_bid + 1);
         emit notify_rewards(); 
-        emit notify_reduction(power_reduction, total_reward);
+        emit notify_reduction(power_saved, total_reward);
     }
 
 
@@ -186,7 +188,7 @@ contract DemandReduction is Ownable{
         return(bids);
     }
 
-    function getWinners() public view returns (address [] memory){
+    function getWinners() public view returns (Bid [] memory){
         return(winners);
     }
 
