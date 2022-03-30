@@ -19,6 +19,7 @@ def listen_for_event(event_filter, poll_interval=2):
 def load_env():
     env = find_dotenv()
     load_dotenv(env)
+    return env
 
 def load_account(account_type : str):
     account_name = os.environ.get(account_type)
