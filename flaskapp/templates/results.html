@@ -1,0 +1,23 @@
+Your bidding profile:
+<ul>
+    <!-- <li>Bid {{i}}: Energy: {{energy}}, Price: {{Price}}</li> -->
+    {% for b in bids %}
+    <li>{{b}}</li>
+    {% endfor %}
+</ul>
+<form action="/">
+    <button>Update Bids</button>
+</form>
+
+Reduction request made at {{time}}! 
+<br>
+Results:
+<meta http-equiv="refresh" content="3; url=http://127.0.0.1:5000/results" >
+<ul>
+{% for item in results.results %}
+Bid selected:
+    {% for key in item %}
+    <li>{{key}}:  {{item[key]}} </li>
+    {% endfor %}
+{% endfor %}
+</ul>
