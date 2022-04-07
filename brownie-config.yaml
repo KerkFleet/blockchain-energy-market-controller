@@ -2,6 +2,7 @@
 # https://eth-brownie.readthedocs.io/en/v1.10.3/config.html#exclude_paths
 dependencies:
   - OpenZeppelin/openzeppelin-contracts@4.4.1
-dotenv: ../.env
+dotenv: .env
 networks:
   default: rinkeby
+
