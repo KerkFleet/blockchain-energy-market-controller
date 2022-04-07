@@ -71,7 +71,6 @@ contract DemandReduction is Ownable{
         delete winners;
         Bid [] memory sorted_bids;
         sorted_bids = bids;
-        quickSort(sorted_bids, 0, bids.length-1);
         insertionSort(sorted_bids);
         uint lastWinningBid = 0;
         lastWinningBid = optimize_bids(sorted_bids, power_reduction);
@@ -118,28 +117,6 @@ contract DemandReduction is Ownable{
         power_saved = power_amount;
         reward_amount = bids[last_bid].price;
         return last_bid;
-    }
-
-
-    // Quick sort algorithm for bids array. Must have a wrapper
-    function quickSort(Bid[] memory arr, uint left, uint right) private{
-        uint i = left;
-        uint j = right;
-        if(i==j) return;
-        uint pivot = arr[uint(left + (right - left) / 2)].price;
-        while (i <= j) {
-            while (arr[uint(i)].price < pivot) i++;
-            while (pivot < arr[uint(j)].price) j--;
-            if (i <= j) {
-                (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
-                i++;
-                j--;
-            }
-        }
-        if (left < j)
-            quickSort(arr, left, j);
-        if (i < right)
-            quickSort(arr, i, right);
     }
 
 
