@@ -100,3 +100,5 @@ Any questions? Join our [Gitter](https://gitter.im/eth-brownie/community) channe
 ## License
 
 This project is licensed under the [MIT license](LICENSE).
+
+https://gist.github.com/plembo/6bc141a150cff0369574ce0b0a92f5e7
