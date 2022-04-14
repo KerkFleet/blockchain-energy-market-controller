@@ -19,55 +19,19 @@ def main():
     user_input = False
     energy = []
     value = []
-    # count = 0
-    # if user_input:
-    #     count = count + 1
-    #     print(f"Block {count}:")
-    #     e = int(float(input("Energy amount: ")) * 10**3)
-    #     v = int(float(input("Energy value: ")) * 10**18)
 
-    #     energy.append(e)
-    #     value.append(v)
-    #     cont = input("Add another?(y/n): ")
-    #     if cont == 'n' or cont == 'N':
-    #         break
-
-    #     # INSERTION SORT decending order
-    #     for step in range(1, len(value)):
-    #         key = value[step]
-    #         energyKey = energy[step]
-    #         j = step - 1
-            
-    #         # Compare key with each element on the left of it until an element smaller than it is found
-    #         # For descending order, change key<array[j] to key>array[j].        
-    #         while j >= 0 and key > value[j]:
-    #             value[j + 1] = value[j]
-    #             energy[j + 1] = energy[j]
-    #             j = j - 1
-            
-    #         # Place key at after the element just smaller than it.
-    #         value[j + 1] = key
-    #         energy[j + 1] = energyKey
-    #     # INSERTION SORT decending order
-
-
-    #     print("Your bids input: ")
-    #     print("Energy(kWh): [", end =" ")
-    #     for i in energy:
-    #         print(i/10**3, end =" ")
-    #     print("]")
-    #     # print("Values: ", value)
-    #     print("Prices(ETH): [", end =" ")
-    #     for i in value:
-    #         print(i/10**18, end =" ")
-    #     print("]")
-    # else:
 
     print("Setting up contract connection. . .")
     contract_address = os.environ.get('CONTRACT_ADDRESS')
     contract_abi = utils.load_contract_abi("DemandReduction")
     web3_contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
+    
+    # Connect Externally
+    # brownie_contract = Contract.from_explorer(contract_address)
+
+    # Connect Locally
     brownie_contract = Contract(contract_address) # example of using a brownie contract instance
+    
     print("Connection created.")
 
     while True:

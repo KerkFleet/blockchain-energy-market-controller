@@ -11,7 +11,12 @@ def main():
     contract_address = os.environ.get("CONTRACT_ADDRESS")
     contract_abi = utils.load_contract_abi("DemandReduction")
 
+    # Connect Externally
+    # brownie_contract = Contract.from_explorer(contract_address)
+
+    # Connect Locally
     brownie_contract = Contract(contract_address) # an example of getting a contract using Brownie
+    
     web3_contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
     reduction_event_filter = web3_contract.events.notify_reduction.createFilter(fromBlock='latest') # using web3 contract instance for events
 
