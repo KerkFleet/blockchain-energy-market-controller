@@ -14,7 +14,7 @@ def main():
     # Connect Externally
     brownie_contract = Contract.from_explorer(contract_address)
 
-    # Connect Locally
+    # Connect Locally --- if connecting locally, update consumer and deploy scripts to work locally as well
     # brownie_contract = Contract(contract_address) # an example of getting a contract using Brownie
     
     web3_contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
