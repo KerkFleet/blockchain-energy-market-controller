@@ -27,10 +27,10 @@ def main():
     web3_contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
     
     # Connect Externally
-    # brownie_contract = Contract.from_explorer(contract_address)
+    brownie_contract = Contract.from_explorer(contract_address)
 
-    # Connect Locally
-    brownie_contract = Contract(contract_address) # example of using a brownie contract instance
+    # Connect Locally --- if connecting locally, update utility and deploy scripts to work locally as well
+    # brownie_contract = Contract(contract_address) # example of using a brownie contract instance
     
     print("Connection created.")
 

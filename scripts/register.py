@@ -17,6 +17,4 @@ def main():
     contract = Contract(contract_address)
     print("Connection created.")
 
-    # test = contract.check_registered(accounts[0])
     contract.register({"from": accounts[0]})
-    # print(test)
