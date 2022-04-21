@@ -12,6 +12,7 @@ contract DemandReduction is Ownable{
         uint256 power;
         uint256 price;
         address consumer;
+        // uint blockCode; <--- this could specify which devices were included in this bid on the consumer side
     }
 
     // ----------- Variables ----------- //
@@ -21,9 +22,13 @@ contract DemandReduction is Ownable{
     address [] registrants;
     
     Bid[] bids; // All consumer bids
-    address [] winners; // selected winners
+    Bid [] winners; // selected winners
+    Bid key; 
     uint reward_amount; // Chosen based on winning bid
     uint power_reduction; // Specified by consumer
+    uint power_saved; //total power reduced
+
+    uint rewards = 0.01 ether; // minimum amount utility must pay to contract to be dispersed as rewards
 
     // -------- Events --------- //
 
@@ -33,32 +38,44 @@ contract DemandReduction is Ownable{
     // Notify consumers of the winning bids
     event notify_rewards();
 
+    // Notify utility of the total reduction received and the total ethereum spent
+    event notify_reduction(uint power, uint reward);
+
+    // --------- Modifiers -------------/
+
+    // modifier to require a function to be payed a specifi amount
+     modifier costs(uint price) {
+      require(msg.value >= price, "Must pay at least 0.01 ether");
+         _;
+    }
+
 
     // ---------- Public Utility Functions -------------- //
 
     
     // Allows the utility to request an energy reduction specified by the amount
-    function request_reduction(uint reduction_amount) public payable onlyOwner{
+    function request_reduction(uint reduction_amount) public payable onlyOwner costs(rewards){
         require(reduction_amount > 0, "Must request a reduction amount > 0");
-        require(msg.value >= 0.01 ether, "Must pay at least 0.01 ether");
         power_reduction = reduction_amount;
         emit notify_consumer();
     }
 
 
     // Driver function for selecting the winning bids
-    function select_winners() public {
+    function select_winners() public onlyOwner {
+        if(bids.length < 1){
+            address payable _owner = payable(owner());
+            _owner.transfer(address(this).balance);
+        }
         require(bids.length > 0, "There are no bids!");
         delete winners;
         Bid [] memory sorted_bids;
         sorted_bids = bids;
-        quickSort(sorted_bids, 0, bids.length-1);
+        insertionSort(sorted_bids);
         uint lastWinningBid = 0;
         lastWinningBid = optimize_bids(sorted_bids, power_reduction);
         disperse_rewards(sorted_bids, lastWinningBid);
         delete bids;
-        // delete reward_amount;
-        // delete power_reduction;
     }
 
 
@@ -92,49 +109,46 @@ contract DemandReduction is Ownable{
         uint last_bid = 0; uint power_amount = 0;
         for(uint i = 0; i < bids.length; i++){
             power_amount += bids[i].power;
+            last_bid = i;
             if(power_amount >= power_reduction){
-                last_bid = i;
-                reward_amount = bids[i].price;
                 break;
             }
         }
+        power_saved = power_amount;
+        reward_amount = bids[last_bid].price;
         return last_bid;
     }
 
 
-    // Quick sort algorithm for bids array. Must have a wrapper
-    function quickSort(Bid[] memory arr, uint left, uint right) private{
-        uint i = left;
-        uint j = right;
-        if(i==j) return;
-        uint pivot = arr[uint(left + (right - left) / 2)].price;
-        while (i <= j) {
-            while (arr[uint(i)].price < pivot) i++;
-            while (pivot < arr[uint(j)].price) j--;
-            if (i <= j) {
-                (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
-                i++;
-                j--;
+    function insertionSort(Bid[] memory arr) private{
+        uint i;
+        uint j;
+        for(i = 1; i < arr.length; i++){
+            key = arr[i];
+            j = i - 1;
+
+            while (j >= 0 && arr[j].price > key.price)
+            {
+                arr[j + 1] = arr[j];
+                j = j - 1;
             }
+            arr[j + 1] = key;
         }
-        if (left < j)
-            quickSort(arr, left, j);
-        if (i < right)
-            quickSort(arr, i, right);
     }
 
-
     // Function to disperse rewards to each selected winner
+    // THIS IS WHERE YOU WOULD SEND APPLIANCE CONTROL SIGNALS ALONG WITH THE REWARD - could set a bit in each winning bid
     function disperse_rewards(Bid [] memory bids, uint last_bid) private {
         for(uint i = 0; i <= last_bid; i++){
             address payable winner = payable(bids[i].consumer);
-            winners.push(bids[i].consumer);
-            // winners.push(bids[i]);
+            winners.push(bids[i]);
             winner.transfer(reward_amount);
         }
         address payable _owner = payable(owner());
         _owner.transfer(address(this).balance);
-        emit notify_rewards();
+        uint total_reward = reward_amount * (last_bid + 1);
+        emit notify_rewards(); 
+        emit notify_reduction(power_saved, total_reward);
     }
 
 
@@ -151,15 +165,17 @@ contract DemandReduction is Ownable{
         return(bids);
     }
 
-    function getWinners() public view returns (address [] memory){
+    function getWinners() public view returns (Bid [] memory){
         return(winners);
     }
-    // function getWinners() public view returns (address [] memory){
-    //     return(winners);
-    // }
 
     function getRewardAmount() public view returns (uint) {
         return(reward_amount);
     }
+
+    function getReductionAmount() public view returns (uint) {
+        return(power_reduction);
+    }
+
 
 }
