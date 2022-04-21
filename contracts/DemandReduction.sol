@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity 0.8.13;
+pragma solidity ^0.8.0;
 
 //This is marked as an error for me but i don't think it's actually an error. IDK.
 import "OpenZeppelin/openzeppelin-contracts@4.4.1/contracts/access/Ownable.sol";
@@ -25,9 +25,8 @@ contract DemandReduction is Ownable{
     Bid [] winners; // selected winners
     Bid key; 
     uint reward_amount; // Chosen based on winning bid
-    uint power_reduction; // Specified by utility
+    uint power_reduction; // Specified by consumer
     uint power_saved; //total power reduced
-    uint total_reward; // total reward dispersed
 
     uint rewards = 0.01 ether; // minimum amount utility must pay to contract to be dispersed as rewards
 
@@ -38,6 +37,9 @@ contract DemandReduction is Ownable{
 
     // Notify consumers of the winning bids
     event notify_rewards();
+
+    // Notify utility of the total reduction received and the total ethereum spent
+    event notify_reduction(uint power, uint reward);
 
     // --------- Modifiers -------------/
 
@@ -144,8 +146,9 @@ contract DemandReduction is Ownable{
         }
         address payable _owner = payable(owner());
         _owner.transfer(address(this).balance);
-        total_reward = reward_amount * (last_bid + 1);
+        uint total_reward = reward_amount * (last_bid + 1);
         emit notify_rewards(); 
+        emit notify_reduction(power_saved, total_reward);
     }
 
 
@@ -172,14 +175,6 @@ contract DemandReduction is Ownable{
 
     function getReductionAmount() public view returns (uint) {
         return(power_reduction);
-    }
-
-    function getTotalReward() public view returns (uint) {
-        return(total_reward);
-    }
-
-    function getTotalReduction() public view returns (uint) {
-        return(power_saved);
     }
 
 
