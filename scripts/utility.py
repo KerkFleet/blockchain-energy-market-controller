@@ -24,7 +24,7 @@ def main():
         # request energy reduction
         energy_reduction = int(float(input("Desired energy reduction amount: ")) * 10**3)
         # amount: give a threshold amount of eth to disperse for rewards, as we don't know ahead of time what the reward value will be
-        brownie_contract.request_reduction(energy_reduction, {"from": account, "amount": 0.01e18}) 
+        brownie_contract.request_reduction(energy_reduction, {"from": account, "amount": 0.04e18}) 
 
         # input("Press when bids have been submitted. . .")
         time.sleep(30)
