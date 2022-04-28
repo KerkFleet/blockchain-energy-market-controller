@@ -94,6 +94,8 @@ Follow the prompts to make a reduction request.
  brownie run scripts/<script_name> main remote 
 ```
 
+**Note:** `scripts/register` is available if access controls are desired that requre consumers to be registered to the smart contract before being allowed to submit bids. If this is desired, the first line in the `submit_bids` function should be uncommented to require the registration step first.
+
 # **Flask App**
 
 A basic form has been created utilizing flask to create a demonstration front end for the `scripts/consumer.py`.
