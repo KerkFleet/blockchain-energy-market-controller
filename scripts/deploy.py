@@ -8,10 +8,16 @@ env = find_dotenv()
 load_dotenv(env)
 utils.load_account("UTILITY_ACCOUNT")
 
-def main():
-    # Deploy Locally -- if deploying locally, update consumer and utility scripts to read locally as well
-    # dr = DemandReduction.deploy({'from': accounts[0]})
-    dr = DemandReduction.deploy({'from': accounts[0]}, publish_source=True)
+def main(remote=None):
+    dr = None
+    if remote:
+        # Deploy remotely
+        print("Publishing contract remotely")
+        dr = DemandReduction.deploy({'from': accounts[0]}, publish_source=True)
+    else:
+        # Deploy Locally -- if deploying locally, update consumer and utility scripts to read locally as well
+        print("Publishing contract locally")
+        dr = DemandReduction.deploy({'from': accounts[0]})
     set_key(env, "CONTRACT_ADDRESS", dr.address)
     return dr
     

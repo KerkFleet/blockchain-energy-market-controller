@@ -8,13 +8,17 @@ env = find_dotenv()
 load_dotenv(env)
 
 
-def main():
+def main(remote=None):
     # load contract data
     contract_address = os.environ.get('CONTRACT_ADDRESS')
-    contract_abi = utils.load_contract_abi("DemandReduction")
 
-    # load contract
-    contract = Contract(contract_address)
-    print("Connection created.")
+    contract = None
+    if remote:
+        # connect to remote contract
+        print("Creating remote contract connection.")
+        contract = Contract.from_explorer(contract_address)
+    else:
+        # connect to local contract
+        contract = Contract(contract_address)
 
     contract.register({"from": accounts[0]})

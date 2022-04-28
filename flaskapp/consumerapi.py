@@ -2,8 +2,7 @@ import subprocess
 import json
 from pathlib import Path
 import sys
-from black import out
-from flask import Flask, redirect, request, render_template
+from flask import Flask, request, render_template
 app = Flask(__name__)
 
 
@@ -27,7 +26,7 @@ def submit():
     f.close()
     global pid
     if not pid:
-        pid = subprocess.Popen(["brownie", "run", "../scripts/consumer.py", "--network", "rinkeby"], 
+        pid = subprocess.Popen(["brownie", "run", "../scripts/consumer.py", "main", "remote", "--network", "rinkeby"], 
                                         text=True,
                                         stdout=sys.stdout
                                         )

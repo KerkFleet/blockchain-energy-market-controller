@@ -15,22 +15,25 @@ def submit_bids(contract, energy, value, account, user_input):
     pass
 
 
-def main():
+def main(remote=None):
     user_input = False
     energy = []
     value = []
 
 
-    print("Setting up contract connection. . .")
     contract_address = os.environ.get('CONTRACT_ADDRESS')
     contract_abi = utils.load_contract_abi("DemandReduction")
     web3_contract = web3.eth.contract(address=contract_address, abi=contract_abi) # example of getting contract using web3
     
-    # Connect Externally
-    brownie_contract = Contract.from_explorer(contract_address)
-
-    # Connect Locally --- if connecting locally, update utility and deploy scripts to work locally as well
-    # brownie_contract = Contract(contract_address) # example of using a brownie contract instance
+    brownie_contract = None
+    if remote:
+        # Connect Externally
+        print("Creating remote contract connection.")
+        brownie_contract = Contract.from_explorer(contract_address)
+    else:
+        # Connect Locally --- if connecting locally, update utility and deploy scripts to work locally as well
+        print("Creating local contract connection.")
+        brownie_contract = Contract(contract_address) # example of using a brownie contract instance
     
     print("Connection created.")
 
