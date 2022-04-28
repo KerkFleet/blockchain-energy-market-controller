@@ -27,7 +27,7 @@ def main():
         brownie_contract.request_reduction(energy_reduction, {"from": account, "amount": 0.04e18}) 
 
         # input("Press when bids have been submitted. . .")
-        time.sleep(30)
+        time.sleep(60)
 
         # select winners
         brownie_contract.select_winners({"from": account}) # using brownie contract instance for calling functions

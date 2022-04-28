@@ -20,7 +20,7 @@ source .venv/bin/activate
   ```
 
 * Paste the private key for your wallet in when prompted.
-* ** For convenience, set a password for your account. ** Not setting a password will result in `brownie` prompting for a password on each script execution.
+* **For convenience, set a password for your account.** Not setting a password will result in `brownie` prompting for a password on each script execution.
 * Paste your password into the `.env` file for `CONSUMER_ACCOUNT_PASS`
 * Paste `<name of account>` into the `.env` file for `CONSUMER_ACCOUNT`
 * Keep in mind this demo runs on the rinkeby test network, so you must have eth in your rinkeby account. 
@@ -45,7 +45,7 @@ source .venv/bin/activate
 * Results will appear in `database/results.json`, and be printed to the screen as well.
 
 
-** Note: Use the `--remote` argument with all of the scripts above when utilizing multiple devices. The scripts are set for local development only by default. **
+**Note: Use the `--remote` argument with all of the scripts above when utilizing multiple devices. The scripts are set for local development only by default.**
 
 
 ## Flask App
@@ -78,7 +78,7 @@ flask run
 
 A separate terminal must still be used to execute the utility script and make a demand reduction request, either on the same device, or a separate one.
 
-** Note: the flask app is hardcoded to execute `scripts/consumer.py` with the `--remote` argument.
+**Note: the flask app is hardcoded to execute `scripts/consumer.py` with the `--remote` argument.**
 
 
 ## Testing
@@ -89,7 +89,7 @@ To run the tests:
 brownie test
 ```
 
-** Note, there are no working tests for this software, but the preset tests have been left for reference for adding tests in the future **
+**Note, there are no working tests for this software, but the preset tests have been left for reference for adding tests in the future**
 
 
 ## Resources
