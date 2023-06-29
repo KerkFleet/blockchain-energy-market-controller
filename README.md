@@ -1,4 +1,4 @@
-# Repo Description
+# Blockchain Energy Market Controller
 
 This is the Blockchain Energy Market Controller Repo. This repo contains code which allows an energy utlity to request an energy reduction which will notify the consumer's machine. The consumer is running a script which will automatically submit bids to the smart contract. After a time set by the utility (60 seconds in the utility script currently) the utility will execute the select_winners function of the smart contract and winners will be selected with those consumers being notified of winning bids and ethereum being dispersed into their wallets.
 
